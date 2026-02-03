@@ -64,6 +64,60 @@ class EmployeeCreateListView(APIView):
 
         return Response(data=serializer_instance.data, status=status.HTTP_200_OK)
 
+
+
+class EmployeeRetrievUpdateDeleteView(APIView):
+    
+    serializer_class = EmployeeSerializer
+
+    authentication_classes = [authentication.BasicAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+
+        employee_obj = get_object_or_404(Employee, id=kwargs.get("pk"))
         
+        if employee_obj.owner != request.user:
+
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        serializer_instance = self.serializer_class(employee_obj)
+
+        return Response(data=serializer_instance.data, status=status.HTTP_200_OK)
+
+
+
+    def put(self, request, *args, **kwargs):
+
+        employee_obj = get_object_or_404(Employee, id=kwargs.get("pk"))
+        
+        if employee_obj.owner != request.user:
+
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer_instance = self.serializer_class(instance=employee_obj, data=request.data)
+
+        if serializer_instance.is_valid():
+
+            serializer_instance.save()
+
+            return Response(data=serializer_instance.data, status=status.HTTP_200_OK)
+        
+        else:
+
+            return Response(data=serializer_instance.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+    def delete(self, request, *args, **kwargs):
+
+        employee_obj = get_object_or_404(Employee, id=kwargs.get("pk"))
+        
+        if employee_obj.owner != request.user:
+
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        employee_obj.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 

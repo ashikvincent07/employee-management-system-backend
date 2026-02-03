@@ -42,4 +42,25 @@ Authorization: Basic user3:user123
 
 
 
-# api call for 
+# api call for update employee
+###
+PUT http://127.0.0.1:8000/employee/4/
+Content-Type: application/json
+Authorization: Basic user3:user123
+
+{
+  "name": "David Rodriguez Jose",
+  "department": "Engineering",
+  "designation": "Cloud Engineer",
+  "salary": 105000,
+  "email": "david.r@company.com",
+  "date_of_joining": "2023-06-20"
+}
+
+
+
+
+# api call for delete employee
+###
+DELETE http://127.0.0.1:8000/employee/4/
+Authorization: Basic user3:user123
